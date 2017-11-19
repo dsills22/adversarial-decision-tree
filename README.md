@@ -16,9 +16,13 @@ We continue traversing the path in this way -- path nodes that are left children
 An example is:
 
 python3 adversarialDecisionTree.py 
+
 [7.2, 0.805555556, 3.6, 0.666666667, 6.1, 0.86440678, 2.5, 0.9999, 'virginica']
+
 virginica
+
 [7.2, 0.805555556, 3.6, 0.666666667, 6.1, 0.86440678, 1.699, 0.9999, 'virginica']
+
 versicolor
 
 The first line is just the command to run the program. 
