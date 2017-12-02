@@ -17,16 +17,16 @@ An example is:
 
 python3 adversarialDecisionTree.py 
 
-[7.2, 0.805555556, 3.6, 0.666666667, 6.1, 0.86440678, 2.5, 0.9999, 'virginica']
-
-virginica
-
-[7.2, 0.805555556, 3.6, 0.666666667, 6.1, 0.86440678, 1.699, 0.9999, 'virginica']
+[6.6, 3.0, 4.4, 1.4, 'versicolor']
 
 versicolor
 
+[6.6, 3.0, 3.299, 1.4, 'versicolor']
+
+setosa
+
 The first line is just the command to run the program. 
-The second line is the test sample. It is a vector of a bunch of features and finally a true label (virginica). 
-The third line is the predicted class by the tree. The tree gets this test sample correct in the third line: virginica. 
-The fourth line is the updated sample after traversing the shortest path from the prediction's outputted leaf node to a tree leaf node with a leaf value of versicolor. So our attack target class is versicolor. Note the only change occurred in column 6 (0-based index) from 2.5 to 1.699. This means our attack found a versicolor leaf node that was a sibling of our initial leaf node. The parent of these two nodes was splitting on the 6th feature with a value of 1.7, and we updated to fall on the left side of that node to 1.699, which caused our sample to be predicted as versicolor instead of virginica. 
-The fifth line is the prediction the tree makes when ran against the updated (adversarial) sample, which is indeed versicolor, our target class.
+The second line is the test sample. It is a vector of a bunch of features and finally a true label (versicolor). 
+The third line is the predicted class by the tree. The tree gets this test sample correct in the third line: versicolor. 
+The fourth line is the updated sample after traversing the shortest path from the prediction's outputted leaf node to a tree leaf node with a leaf value of setosa. So our attack target class is setosa. Note the only change occurred in column 2 (0-based index) from 4.4 to 3.299. This means our attack found a setosa leaf node that was a sibling of our initial leaf node. The parent of these two nodes was splitting on the 2nd feature with a value of 3.3, and we updated to fall on the left side of that node to 3.299, which caused our sample to be predicted as setosa instead of versicolor. 
+The fifth line is the prediction the tree makes when ran against the updated (adversarial) sample, which is indeed setosa, our target class.
