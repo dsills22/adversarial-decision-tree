@@ -1,3 +1,4 @@
+import random
 from random import seed
 from random import randrange
 from csv import reader
@@ -97,10 +98,10 @@ def predict(node, sample):
 
 #run a test set through the tree, report accuracy
 def treeTest(tree, test):
-    correct = 0
+    correct = 0.0
     for row in test:
         pred = predict(tree, row)
-        if(pred == row[-1]):
+        if(pred['leaf'] == row[-1]):
             correct = correct + 1
     return correct / len(test)
 
@@ -162,33 +163,43 @@ def attackTree(fromLeaf, sample, toTarget, tree):
         else:
             #if path node is a parent node, do nothing, just update lastNode
             if('parent' in lastNode and node == lastNode['parent']): 
-                #print('up')
+                if node['left'] == lastNode:
+                    print('up left')
+                else:
+                    print('up right')
                 lastNode = node 
             #if path node is a left-node...
             elif('left' in lastNode and node == lastNode['left']):
-                #print('left')
+                print('down left')
                 #update sample split col to fall on left side of split!
                 #note lastNode's left node is the path node in the shortest path to the target
                 #so we want to update our sample to fall on the left side of lastNode's value
                 #so we the tree will take the left path instead of the right one
-                sample[lastNode['col']] = lastNode['value'] - 0.001 #subtract to fall on left side
+                if sample[lastNode['col']] >= lastNode['value']:
+                    sample[lastNode['col']] = lastNode['value'] - 0.001 #subtract to fall on left side
+                lastNode = node
             #if path node is a right-node...
             elif('right' in lastNode and node == lastNode['right']):
                 #update sample split col to fall on right side of split!
-                sample[lastNode['col']] = lastNode['value'] + 0.001 #add to fall on right side
-                #print('right')
+                if sample[lastNode['col']] < lastNode['value']:
+                    sample[lastNode['col']] = lastNode['value'] + 0.001 #add to fall on right side
+                lastNode = node
+                print('down right')
+            else:
+                print("Invalid Path")
     return sample
 
-seed(1)
+seed(12345)
 filename = 'iris.csv'
 dataset = list(reader(open(filename)))
+random.shuffle(dataset)
 
 for row in dataset:
     for col in range(len(row) - 1):
         row[col] = float(row[col])
 
-train = dataset[0:75]
-test = dataset[75:]
+train = dataset[0:100]
+test = dataset[100:150]
 classes = set([x[-1] for x in dataset])
 maxDepth = 10
 minSize = 15
@@ -197,7 +208,7 @@ tree = buildTree(train, maxDepth, minSize)
 acc = treeTest(tree, test)
 
 leaf = predict(tree, test[0])
-newSample = attackTree(leaf, test[0][:], 'setosa', tree)
+newSample = attackTree(leaf, test[0][:], 'versicolor', tree)
 pred = predict(tree, newSample)
 
 print(test[0]) #verginica
